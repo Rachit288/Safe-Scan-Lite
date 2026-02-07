@@ -4,7 +4,7 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=180&section=header&text=🛡️%20Safe-Scan%20Lite&fontSize=42&fontColor=fff&animation=twinkling&fontAlignY=32&desc=AI-Powered%20QR%20Code%20Security%20Scanner&descSize=18&descAlignY=52" width="100%"/>
 
 <!-- Typing Animation -->
-<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&duration=3000&pause=1000&color=00D9FF&center=true&vCenter=true&multiline=true&repeat=true&width=700&height=100&lines=🔍+Scan+QR+Codes+Safely+Before+Opening;🚨+Detect+Quishing+%26+Phishing+Attacks;🛡️+Protect+Non-Technical+Users" alt="Typing SVG" /></a>
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&duration=3000&pause=1000&color=00D9FF&center=true&vCenter=true&multiline=true&repeat=true&width=700&height=100&lines=%F0%9F%94%8D+Scan+QR+Codes+Safely+Before+Opening;%F0%9F%9A%A8+Detect+Quishing+and+Phishing+Attacks;%F0%9F%9B%A1%EF%B8%8F+Protect+Non-Technical+Users" alt="Typing SVG" /></a>
 
 <br/>
 
