@@ -1,0 +1,221 @@
+
+SAFE-SCAN LITE – WEB PAGES & BACKEND API SPECIFICATION
+====================================================
+
+========================
+WEB PAGES (BRIEF & COMPLETE)
+========================
+
+1. Landing Page (/)
+-------------------
+Purpose:
+- Explain what Safe-Scan Lite does
+- Build trust
+- Guide users to scan a QR code
+
+Main UI Elements:
+- Hero: “Scan QR codes safely before opening”
+- 3-step flow: Scan → Analyze → Understand
+- CTA button: “Scan a QR code”
+
+Backend:
+- None (static page)
+
+
+2. Scan Page (/scan)
+--------------------
+Purpose:
+- Input QR code
+
+Features:
+- Camera-based QR scanning
+- QR image upload
+- Optional manual input
+
+Action:
+- After decoding QR, send data to POST /api/scan
+
+
+3. Analyzing Page (/analyzing)
+------------------------------
+Purpose:
+- Show progress during analysis
+- Improve user experience
+
+UI:
+- Loader animation
+- Steps:
+  - Decoding QR
+  - Checking destination
+  - Analyzing risk
+
+Backend:
+- None (waiting screen)
+
+
+4. Result Page (/result)
+------------------------
+Purpose:
+- Display complete analysis
+
+Displays:
+- Risk level & score
+- Intent Guess badge
+- Simple / Normal explanation
+- “Why You Were Targeted” insights
+- Safe Preview Summary
+- “We Checked This So You Don’t Have To” transparency panel
+
+Backend:
+- Uses response from POST /api/scan
+
+
+5. Error Page (/error)
+----------------------
+Purpose:
+- Handle invalid QR codes
+- Unsupported content
+- Timeouts or failures
+
+
+(Optional) Learn Page (/learn)
+------------------------------
+Purpose:
+- Educate users about QR scams
+- Awareness & prevention
+
+Backend:
+- None (static page)
+
+
+========================
+BACKEND API DESIGN
+========================
+
+Base Path:
+/api
+
+
+1. POST /api/scan
+-----------------
+Purpose:
+- Main endpoint to analyze QR content
+
+Request Body:
+{
+  "qr_content": "https://bit.ly/3XyzAbc"
+}
+
+Response Body:
+{
+  "status": "success",
+  "risk": {
+    "level": "danger",
+    "score": 82
+  },
+  "intent": {
+    "code": "credential_theft",
+    "label": "Trying to steal your login details"
+  },
+  "signals": {
+    "short_url": true,
+    "brand_impersonation": true,
+    "payment_request": false,
+    "apk_download": false,
+    "http_only": true,
+    "domain_age_days": 3,
+    "redirect_count": 2
+  },
+  "reputation": {
+    "virustotal_detected": true,
+    "virustotal_score": 12,
+    "safe_browsing_threat": true,
+    "threat_types": ["MALWARE", "SOCIAL_ENGINEERING"],
+    "checked_by": ["VirusTotal", "Google Safe Browsing"]
+  },
+  "safe_preview": {
+    "final_domain": "paytm-secure-login.xyz",
+    "https": false,
+    "content_type": "login_page",
+    "country": "Unknown",
+    "file_download": false
+  },
+  "checked_items": [
+    "Domain age",
+    "Redirect behavior",
+    "Payment requests",
+    "File downloads",
+    "Known scam databases",
+    "Reputation databases (VirusTotal, Google Safe Browsing)"
+  ]
+}
+
+
+2. POST /api/decode (Optional)
+------------------------------
+Purpose:
+- Decode QR image on backend (if not decoded on frontend)
+
+Request Body:
+{
+  "image_base64": "data:image/png;base64,iVBORw0KGgoAAA..."
+}
+
+Response Body:
+{
+  "qr_content": "https://example.com/login"
+}
+
+
+3. GET /api/health
+------------------
+Purpose:
+- Health check endpoint
+
+Response Body:
+{
+  "status": "ok",
+  "service": "safe-scan-lite"
+}
+
+
+========================
+FRONTEND FEATURE MAPPING
+========================
+
+Explain Like I’m Not Tech-Savvy Mode:
+- Uses signals object
+- Frontend maps signals to simple or normal explanations
+
+Intent Guess Badge:
+- Uses intent.label
+
+Why You Were Targeted:
+- Derived from signals such as:
+  - short_url
+  - brand_impersonation
+  - domain_age_days
+
+Safe Preview Summary:
+- Uses safe_preview object
+- No website rendering or execution
+
+Transparency Panel:
+- Uses checked_items list
+
+Reputation Check:
+- Uses reputation object
+- Shows results from VirusTotal API and Google Safe Browsing API
+- Gracefully degrades if API keys not configured
+
+========================
+DESIGN PHILOSOPHY
+========================
+
+- Backend returns facts and signals
+- Frontend handles explanations and UX
+- Deterministic, explainable security
+- No agentic behavior
+- No heavy ML
+- Focus on clarity and trust
+- Reputation checks via VirusTotal & Google Safe Browsing APIs
