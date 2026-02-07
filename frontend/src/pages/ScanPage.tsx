@@ -24,7 +24,12 @@ const ScanPage = () => {
 
             await html5Qrcode.start(
                 { facingMode: 'environment' },
-                { fps: 10, qrbox: { width: 250, height: 250 } },
+                {
+                    fps: 30,    // Increased from 10 for better detection
+                    qrbox: 250, // Use number for square box that auto-adjusts
+                    aspectRatio: 1.0,
+                    disableFlip: false  // Allow flipped QR codes
+                },
                 (decodedText) => {
                     handleScanSuccess(decodedText);
                 },
@@ -77,8 +82,15 @@ const ScanPage = () => {
             const html5Qrcode = new Html5Qrcode('qr-file-reader');
             const result = await html5Qrcode.scanFile(file, true);
             handleScanSuccess(result);
-        } catch {
-            navigate('/error', { state: { message: 'Could not read QR code from image. Please try a clearer image.' } });
+        } catch (error) {
+            console.error('QR scan error:', error);
+            // Show more helpful error message
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            navigate('/error', {
+                state: {
+                    message: `Could not read QR code from image. ${errorMessage.includes('No QR code found') ? 'Make sure the QR code is clear and well-lit.' : 'Please try a clearer image or use the camera scanner.'}`
+                }
+            });
         }
     };
 
