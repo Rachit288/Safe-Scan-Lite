@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# Node.js
+node_modules/
+dist/
+dist-ssr
+*.local
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Project specific
+research_guide.txt
+extract_doc.py
+Safe-Scan_Lite_Research_Guide (1).docx
+backend/test_backend.py
+backend/quick_test.py
+BACKEND_IMPLEMENTATION_CHECKLIST.md
