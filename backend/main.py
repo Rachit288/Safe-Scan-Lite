@@ -530,7 +530,7 @@ async def decode_qr_image(request: DecodeRequest):
         detail="Server-side QR decoding not implemented. Please decode on client side."
     )
 
-@app.get("/api/health", response_model=HealthResponse)
+@app.api_route("/api/health", methods=["GET", "HEAD"], response_model=HealthResponse)
 async def health_check():
     """Health check endpoint"""
     return {
