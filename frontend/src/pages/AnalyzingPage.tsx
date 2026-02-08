@@ -31,6 +31,19 @@ const AnalyzingPage = () => {
         const analyzeContent = async () => {
             // Step 1: Decode
             setSteps(prev => prev.map(s => s.id === 'decode' ? { ...s, status: 'active' } : s));
+
+            // Try to wake up the server if it's sleeping (Render cold start)
+            try {
+                await fetch('https://safe-scan-lite.onrender.com/api/health', {
+                    method: 'GET',
+                    signal: AbortSignal.timeout(5000) // Short timeout for health check
+                }).catch(() => {
+                    // Ignore health check errors, just trying to wake up server
+                });
+            } catch {
+                // Ignore errors
+            }
+
             await delay(800);
             setSteps(prev => prev.map(s => s.id === 'decode' ? { ...s, status: 'complete' } : s));
 
@@ -48,8 +61,26 @@ const AnalyzingPage = () => {
 
                 await delay(500);
                 navigate('/result', { state: { result, qrContent } });
-            } catch (error) {
-                navigate('/error', { state: { message: 'Analysis failed. Please try again.' } });
+            } catch (error: any) {
+                console.error('Analysis error:', error);
+
+                let errorMessage = 'Analysis failed. Please try again.';
+
+                // Handle specific error types
+                if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+                    errorMessage = 'The server is taking longer than expected to respond. This might be because the server is starting up. Please wait a moment and try again.';
+                } else if (error.response) {
+                    // Server responded with error
+                    errorMessage = error.response.data?.detail || `Server error: ${error.response.status}`;
+                } else if (error.request) {
+                    // Request made but no response
+                    errorMessage = 'Unable to reach the server. Please check your internet connection and try again.';
+                } else {
+                    // Something else happened
+                    errorMessage = error.message || 'An unexpected error occurred.';
+                }
+
+                navigate('/error', { state: { message: errorMessage } });
             }
         };
 
